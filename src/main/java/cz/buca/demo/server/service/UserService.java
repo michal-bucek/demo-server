@@ -14,12 +14,13 @@ import org.springframework.stereotype.Service;
 
 import cz.buca.demo.server.config.ApplicationConfig;
 import cz.buca.demo.server.dto.Data;
-import cz.buca.demo.server.dto.Search;
-import cz.buca.demo.server.dto.UserCreate;
-import cz.buca.demo.server.dto.UserDetail;
-import cz.buca.demo.server.dto.UserSearch;
-import cz.buca.demo.server.dto.UserUpdate;
+import cz.buca.demo.server.dto.user.SearchUser;
+import cz.buca.demo.server.dto.user.UserCreate;
+import cz.buca.demo.server.dto.user.UserDetail;
+import cz.buca.demo.server.dto.user.UserSearch;
+import cz.buca.demo.server.dto.user.UserUpdate;
 import cz.buca.demo.server.entity.User;
+import cz.buca.demo.server.event.UserEvent;
 import cz.buca.demo.server.maper.DtoMapper;
 import cz.buca.demo.server.repository.UserRepository;
 import cz.buca.demo.server.security.UserPrincipal;
@@ -40,6 +41,9 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired
 	private DtoMapper dtoMapper;
+	
+	@Autowired
+	private EventService eventService;
 	
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
@@ -66,7 +70,7 @@ public class UserService implements UserDetailsService {
 		return userPrincipal;
 	}	
 
-	public Data<UserSearch> search(Search search) {
+	public Data<UserSearch> search(SearchUser search) {
 		Page<UserSearch> page = userRepository.search(search);
 		Data<UserSearch> data = new Data<UserSearch>(page);
 		
@@ -76,54 +80,64 @@ public class UserService implements UserDetailsService {
 	}
 	
 	public List<UserDetail> findAll() {
-		List<UserDetail> userDetails = userRepository.findAll()
+		List<UserDetail> details = userRepository.findAll()
 			.stream()
 			.map(user -> dtoMapper.toUserDetail(user))
 			.collect(Collectors.toList());
 		
-		log.debug("find all return "+ userDetails);
+		log.debug("find all return "+ details);
 		
-		return userDetails;
+		return details;
 	}
  	
 	public UserDetail findById(Long id) {
 		User user = userRepository.findById(id).get();
-		UserDetail userDetail = dtoMapper.toUserDetail(user);
+		UserDetail detail = dtoMapper.toUserDetail(user);
 		
-		log.debug("fing by ID return "+ userDetail +" for ID "+ id);
+		log.debug("fing by ID return "+ detail +" for ID "+ id);
 		
-		return userDetail;
+		return detail;
 	}
 
-	public UserDetail create(UserCreate userCreate) {
-		User oldUser = dtoMapper.toUser(userCreate);
+	public UserDetail create(UserCreate create) {
+		User oldUser = dtoMapper.toUser(create);
 		String encodePass = passwordEncoder.encode(oldUser.getPass());
 		
 		oldUser.setPass(encodePass);
 		
 		User newUser = userRepository.save(oldUser);
-		UserDetail userDetail = dtoMapper.toUserDetail(newUser);
+		UserDetail detail = dtoMapper.toUserDetail(newUser);
+		UserEvent event = UserEvent.created(detail);
 		
-		log.debug("cretae return "+ userDetail +" for "+ userCreate);
+		eventService.publish(event);		
+		log.debug("cretae return "+ detail +" for "+ create);
 		
-		return userDetail;
+		return detail;
 	}
 
-	public UserDetail update(Long id, UserUpdate userUpdate) {
+	public UserDetail update(Long id, UserUpdate update) {
 		User oldUser = userRepository.findById(id).get();
 		
-		dtoMapper.updateUser(userUpdate, oldUser);
+		dtoMapper.updateUser(update, oldUser);
 		
 		User newUser = userRepository.save(oldUser);
-		UserDetail userDetail = dtoMapper.toUserDetail(newUser);
+		UserDetail detail = dtoMapper.toUserDetail(newUser);
+		UserEvent event = UserEvent.updated(detail);
 		
-		log.debug("update return "+ userDetail +" for ID "+ id +" and "+ userUpdate);
+		eventService.publish(event);		
+		log.debug("update return "+ detail +" for ID "+ id +" and "+ update);
 		
-		return userDetail;
+		return detail;
 	}
 	
 	public void deleteById(Long id) {
 		log.info("delete by ID with ID "+ id);
-		userRepository.deleteById(id);
+		
+		User user = userRepository.findById(id).get();
+		UserDetail detail = dtoMapper.toUserDetail(user);
+		UserEvent event = UserEvent.created(detail);
+		
+		userRepository.delete(user);		
+		eventService.publish(event);		
 	}
 }

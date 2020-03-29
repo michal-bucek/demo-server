@@ -56,7 +56,8 @@ public class AuthenticationService {
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.joining(","));			
 			token = Jwts.builder()
-				.setSubject(userPrincipal.getUsername())
+				.setSubject(userPrincipal.getId())
+				.claim("id", userPrincipal.getName())
 				.claim("name", userPrincipal.getName())
 				.claim("roles", roles)
 				.setExpiration(expiration)
@@ -82,12 +83,13 @@ public class AuthenticationService {
 					.setSigningKey(secret)
 					.parseClaimsJws(token)
 					.getBody();
+				String id = claims.get("id").toString();
 				String name = claims.get("name").toString();
 				String login = claims.getSubject();				
 				Collection<GrantedAuthority> authorities = Arrays.stream(claims.get("roles").toString().split(","))
 					.map(SimpleGrantedAuthority::new)
 					.collect(Collectors.toList());
-				UserPrincipal userPrincipal = new UserPrincipal(name, login, authorities);
+				UserPrincipal userPrincipal = new UserPrincipal(id, name, login, authorities);
 				authentication = new UsernamePasswordAuthenticationToken(userPrincipal, null, authorities);
 				
 			} catch (ExpiredJwtException expiredJwtException) {
@@ -121,6 +123,7 @@ public class AuthenticationService {
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList());
 			
+			session.setId(userPrincipal.getId());
 			session.setName(userPrincipal.getName());
 			session.setToken(token);
 			session.setRefresh(refresh);

@@ -1,4 +1,4 @@
-package cz.buca.demo.server.dto;
+package cz.buca.demo.server.dto.user;
 
 import java.util.List;
 

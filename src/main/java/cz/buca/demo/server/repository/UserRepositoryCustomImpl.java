@@ -12,8 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
-import cz.buca.demo.server.dto.Search;
-import cz.buca.demo.server.dto.UserSearch;
+import cz.buca.demo.server.dto.user.SearchUser;
+import cz.buca.demo.server.dto.user.UserSearch;
 
 public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
@@ -21,7 +21,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
     private EntityManager entityManager;
 	
 	@Override
-	public Page<UserSearch> search(Search search) {
+	public Page<UserSearch> search(SearchUser search) {
 		Pageable pageable = null;
 		
 		if (search.getSort() != null && !search.getSort().equals("")) {
