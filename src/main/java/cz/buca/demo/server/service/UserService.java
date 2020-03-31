@@ -20,7 +20,6 @@ import cz.buca.demo.server.dto.user.UserDetail;
 import cz.buca.demo.server.dto.user.UserSearch;
 import cz.buca.demo.server.dto.user.UserUpdate;
 import cz.buca.demo.server.entity.User;
-import cz.buca.demo.server.event.UserEvent;
 import cz.buca.demo.server.maper.DtoMapper;
 import cz.buca.demo.server.repository.UserRepository;
 import cz.buca.demo.server.security.UserPrincipal;
@@ -107,9 +106,8 @@ public class UserService implements UserDetailsService {
 		
 		User newUser = userRepository.save(oldUser);
 		UserDetail detail = dtoMapper.toUserDetail(newUser);
-		UserEvent event = UserEvent.created(detail);
 		
-		eventService.publish(event);		
+		eventService.publish("[User] created", detail);		
 		log.debug("cretae return "+ detail +" for "+ create);
 		
 		return detail;
@@ -122,9 +120,8 @@ public class UserService implements UserDetailsService {
 		
 		User newUser = userRepository.save(oldUser);
 		UserDetail detail = dtoMapper.toUserDetail(newUser);
-		UserEvent event = UserEvent.updated(detail);
 		
-		eventService.publish(event);		
+		eventService.publish("[User] updated", detail);	
 		log.debug("update return "+ detail +" for ID "+ id +" and "+ update);
 		
 		return detail;
@@ -135,9 +132,8 @@ public class UserService implements UserDetailsService {
 		
 		User user = userRepository.findById(id).get();
 		UserDetail detail = dtoMapper.toUserDetail(user);
-		UserEvent event = UserEvent.created(detail);
 		
 		userRepository.delete(user);		
-		eventService.publish(event);		
+		eventService.publish("[User] deleted", detail);
 	}
 }

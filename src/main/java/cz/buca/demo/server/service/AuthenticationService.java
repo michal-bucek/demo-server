@@ -56,8 +56,8 @@ public class AuthenticationService {
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.joining(","));			
 			token = Jwts.builder()
-				.setSubject(userPrincipal.getId())
-				.claim("id", userPrincipal.getName())
+				.setSubject(userPrincipal.getUsername())
+				.claim("id", userPrincipal.getId())
 				.claim("name", userPrincipal.getName())
 				.claim("roles", roles)
 				.setExpiration(expiration)

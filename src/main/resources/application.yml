@@ -16,7 +16,7 @@ app:
 
 logging:
   level:
-    org.springframework: DEBUG
+    org.springframework: INFO
     cz.buca: DEBUG
 
 spring:
