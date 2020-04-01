@@ -78,15 +78,18 @@ public class UserController {
 	public UserDetail update(@PathVariable Long id, @RequestBody UserUpdate update) throws ServiceException {
 		UserDetail detail = userService.update(id, update);
 
-		log.debug("update return " + detail + " for " + update);
+		log.debug("update return " + detail + " for ID " + id + " and " + update);
 
 		return detail;
 	}
 
 	@Operation(security = @SecurityRequirement(name = "jwt"))
 	@DeleteMapping(path = "/delete/{id}")
-	public void delete(@PathVariable Long id) throws ServiceException {
-		log.debug("delete with ID " + id);
-		userService.deleteById(id);
+	public UserDetail delete(@PathVariable Long id) throws ServiceException {
+		UserDetail detail = userService.deleteById(id);
+		
+		log.debug("delete return "+ detail +" for ID " + id);
+	
+		return detail;
 	}
 }

@@ -127,13 +127,15 @@ public class UserService implements UserDetailsService {
 		return detail;
 	}
 	
-	public void deleteById(Long id) {
-		log.info("delete by ID with ID "+ id);
-		
+	public UserDetail deleteById(Long id) {		
 		User user = userRepository.findById(id).get();
 		UserDetail detail = dtoMapper.toUserDetail(user);
 		
 		userRepository.delete(user);		
 		eventService.publish("[User] deleted", detail);
+		
+		log.info("delete by ID return "+ detail +" for ID "+ id);
+		
+		return detail;
 	}
 }
