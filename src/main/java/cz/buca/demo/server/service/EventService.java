@@ -21,7 +21,7 @@ public class EventService {
 	@Autowired
 	private ApplicationEventPublisher eventPublisher;
 
-	public void publish(String type, Object data) {
+	public void publish(String destination, String type, Object data) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 		Event event = new Event();
@@ -33,7 +33,7 @@ public class EventService {
 		
 		log.debug("publish "+ event);
 		
-		messagingTemplate.convertAndSend("/event", event);
+		messagingTemplate.convertAndSend(destination, event);
 		eventPublisher.publishEvent(event);
 	}
 }

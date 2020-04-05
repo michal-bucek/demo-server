@@ -107,7 +107,7 @@ public class UserService implements UserDetailsService {
 		User newUser = userRepository.save(oldUser);
 		UserDetail detail = dtoMapper.toUserDetail(newUser);
 		
-		eventService.publish("[User] created", detail);		
+		eventService.publish("/event/user", "[User] created", detail);		
 		log.debug("cretae return "+ detail +" for "+ create);
 		
 		return detail;
@@ -121,7 +121,7 @@ public class UserService implements UserDetailsService {
 		User newUser = userRepository.save(oldUser);
 		UserDetail detail = dtoMapper.toUserDetail(newUser);
 		
-		eventService.publish("[User] updated", detail);	
+		eventService.publish("/event/user", "[User] updated", detail);	
 		log.debug("update return "+ detail +" for ID "+ id +" and "+ update);
 		
 		return detail;
@@ -132,7 +132,7 @@ public class UserService implements UserDetailsService {
 		UserDetail detail = dtoMapper.toUserDetail(user);
 		
 		userRepository.delete(user);		
-		eventService.publish("[User] deleted", detail);
+		eventService.publish("/event/user", "[User] deleted", detail);
 		
 		log.info("delete by ID return "+ detail +" for ID "+ id);
 		
