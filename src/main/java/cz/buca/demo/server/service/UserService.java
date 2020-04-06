@@ -132,8 +132,7 @@ public class UserService implements UserDetailsService {
 		UserDetail detail = dtoMapper.toUserDetail(user);
 		
 		userRepository.delete(user);		
-		eventService.publish("/event/user", "[User] deleted", detail);
-		
+		eventService.publish("/event/user", "[User] deleted", detail);		
 		log.info("delete by ID return "+ detail +" for ID "+ id);
 		
 		return detail;
