@@ -37,6 +37,26 @@ public class AuthenticationService {
 	@Autowired
     private AuthenticationManager authenticationManager;
 	
+	private Session generateSession(UserPrincipal userPrincipal) throws ServiceException {
+		Session session = new Session();
+		String token = generateToken(userPrincipal, false);
+		String refresh = generateToken(userPrincipal, true);
+		List<String> roles = userPrincipal.getAuthorities()
+			.stream()
+			.map(GrantedAuthority::getAuthority)
+			.collect(Collectors.toList());
+		
+		session.setId(userPrincipal.getId());
+		session.setName(userPrincipal.getName());
+		session.setToken(token);
+		session.setRefresh(refresh);
+		session.setRoles(roles);
+		
+		log.debug("generate session return "+ session +" for "+ userPrincipal);
+		
+		return session;
+	}
+	
 	public String generateToken(UserPrincipal userPrincipal, boolean isRefreshToken) throws ServiceException {
 		String token = null;
 		Integer minutesExpiration = null;
@@ -115,19 +135,7 @@ public class AuthenticationService {
 			
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			
-			session = new Session();
-			String token = generateToken(userPrincipal, false);
-			String refresh = generateToken(userPrincipal, true);
-			List<String> roles = userPrincipal.getAuthorities()
-				.stream()
-				.map(GrantedAuthority::getAuthority)
-				.collect(Collectors.toList());
-			
-			session.setId(userPrincipal.getId());
-			session.setName(userPrincipal.getName());
-			session.setToken(token);
-			session.setRefresh(refresh);
-			session.setRoles(roles);
+			session = generateSession(userPrincipal);
 			
 		} catch (Exception exception) {			
 			throw new ServiceException("login with "+ login +" faild", exception);
@@ -139,6 +147,19 @@ public class AuthenticationService {
 	}
 	
 	public Session refresh() throws ServiceException {
-		return null;
+		Session session = null;
+		
+		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();			
+			session = generateSession(userPrincipal);
+			
+		} catch (Exception exception) {			
+			throw new ServiceException("refresh faild", exception);
+		}
+
+		log.debug("refresh return " + session);
+
+		return session;
 	}
 }

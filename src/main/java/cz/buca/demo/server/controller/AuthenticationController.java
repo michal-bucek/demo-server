@@ -34,7 +34,7 @@ public class AuthenticationController {
 	}
 
 	@Operation(security = @SecurityRequirement(name = "jwt"))
-	@GetMapping(path = "/refresh", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Session refresh() throws ServiceException {
 		Session session = authenticationService.refresh();
 
