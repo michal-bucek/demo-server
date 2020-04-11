@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import cz.buca.demo.server.config.ApplicationConfig;
 import cz.buca.demo.server.dto.Data;
 import cz.buca.demo.server.dto.user.SearchUser;
+import cz.buca.demo.server.dto.user.UserChangePassword;
 import cz.buca.demo.server.dto.user.UserCreate;
 import cz.buca.demo.server.dto.user.UserDetail;
 import cz.buca.demo.server.dto.user.UserSearch;
@@ -123,6 +124,21 @@ public class UserService implements UserDetailsService {
 		
 		eventService.publish("/event/user", "[User] updated", detail);	
 		log.debug("update return "+ detail +" for ID "+ id +" and "+ update);
+		
+		return detail;
+	}
+	
+	public UserDetail changePassword(Long id, UserChangePassword changePassword) {
+		User oldUser = userRepository.findById(id).get();
+		String encodePass = passwordEncoder.encode(changePassword.getPass());
+		
+		oldUser.setPass(encodePass);
+		
+		User newUser = userRepository.save(oldUser);
+		UserDetail detail = dtoMapper.toUserDetail(newUser);
+		
+		eventService.publish("/event/user", "[User] change password", detail);	
+		log.debug("change password return "+ detail +" for ID "+ id +" and "+ changePassword);
 		
 		return detail;
 	}

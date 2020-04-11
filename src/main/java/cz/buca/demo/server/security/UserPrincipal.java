@@ -39,6 +39,7 @@ public class UserPrincipal implements UserDetails {
 			.stream()
 			.map(SimpleGrantedAuthority::new)
 			.collect(Collectors.toList());
+		this.enabled = user.getActive();
 	}
 	
 	public UserPrincipal(String id, String name, String username, Collection<GrantedAuthority> authorities) {

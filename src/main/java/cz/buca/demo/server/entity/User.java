@@ -31,6 +31,8 @@ public class User extends Auditable {
 	private String pass;
 	
 	private String email;
+	
+	private Boolean active;
 
 	@ElementCollection
 	private List<String> roles;

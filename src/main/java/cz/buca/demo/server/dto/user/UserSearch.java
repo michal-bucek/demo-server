@@ -13,6 +13,7 @@ public class UserSearch {
 	private String name;
 	private String login;
 	private String email;
+	private Boolean active;
 	
 	private String modifier;
 	private Date modified;

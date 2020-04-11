@@ -53,7 +53,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 			orderBy = " order by user."+ search.getSort() +" "+ search.getOrder();
 		}
 		
-		String contentSql = "select new "+ UserSearch.class.getName() +"(user.id, user.name, user.login, user.email, user.modifier, user.modified) from User user" + where + orderBy;
+		String contentSql = "select new "+ UserSearch.class.getName() +"(user.id, user.name, user.login, user.email, user.active, user.modifier, user.modified) from User user" + where + orderBy;
 		String totalSql = "select count(user) from User user" + where;
 		
 		System.out.println("contentSql: "+ contentSql);

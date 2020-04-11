@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cz.buca.demo.server.dto.Data;
 import cz.buca.demo.server.dto.user.SearchUser;
+import cz.buca.demo.server.dto.user.UserChangePassword;
 import cz.buca.demo.server.dto.user.UserCreate;
 import cz.buca.demo.server.dto.user.UserDetail;
 import cz.buca.demo.server.dto.user.UserSearch;
@@ -79,6 +80,16 @@ public class UserController {
 		UserDetail detail = userService.update(id, update);
 
 		log.debug("update return " + detail + " for ID " + id + " and " + update);
+
+		return detail;
+	}
+	
+	@Operation(security = @SecurityRequirement(name = "jwt"))
+	@PutMapping(path = "/changePassword/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public UserDetail changePassword(@PathVariable Long id, @RequestBody UserChangePassword changePassword) throws ServiceException {
+		UserDetail detail = userService.changePassword(id, changePassword);
+
+		log.debug("change password return " + detail + " for ID " + id + " and " + changePassword);
 
 		return detail;
 	}

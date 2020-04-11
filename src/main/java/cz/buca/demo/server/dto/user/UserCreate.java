@@ -13,5 +13,6 @@ public class UserCreate {
 	private String login;
 	private String pass;
 	private String email;
+	private Boolean active;
 	private List<String> roles;
 }

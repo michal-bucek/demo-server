@@ -16,6 +16,7 @@ public class UserDetail {
 	private String name;
 	private String login;
 	private String email;
+	private Boolean active;
 	private List<String> roles;
 	
 	private String creator;

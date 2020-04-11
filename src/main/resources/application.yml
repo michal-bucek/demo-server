@@ -4,12 +4,13 @@ app:
     login: admin
     # 12345
     pass: $2a$10$XgfdNZhUxy7EgZxdkWOhF.3/Az.CERogYI2g19AXY1Xj8t80YDoNC
+    active: true
     roles:
       - ADMIN
       - USER
   token:
     secret: testovacka
-    expiration: 60
+    expiration: 10
     refresh: 60
   cors:
     origin: "http://localhost:4200"
