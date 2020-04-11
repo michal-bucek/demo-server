@@ -2,7 +2,6 @@ package cz.buca.demo.server.entity;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
@@ -20,18 +19,14 @@ import lombok.Data;
 public abstract class Auditable {
 
 	@CreatedBy
-	@Column(updatable = false)
 	private String creator;
 
 	@CreatedDate
-	@Column(updatable = false)
 	private Date created;
 
 	@LastModifiedBy
-	@Column(updatable = false)
 	private String modifier;
 
 	@LastModifiedDate
-	@Column(updatable = false)
 	private Date modified;
 }
