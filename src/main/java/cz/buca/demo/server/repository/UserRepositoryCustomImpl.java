@@ -37,14 +37,24 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 			pageable = PageRequest.of(search.getPage(), search.getPerPage());
 		}
 		
-		System.out.println("pageable: "+ pageable);
-		
 		int firstResult = pageable.getPageNumber() * pageable.getPageSize();
 		int maxResults = pageable.getPageSize();
-		String where = "";
+		String where = " where 1 = 1";
 		
-		if (search.getText() != null && !search.getText().equals("")) {
-			where  = " where user.name like '"+ search.getText() + "%'";
+		if (search.getName() != null && !search.getName().equals("")) {
+			where = where + " and user.name like '"+ search.getName() + "%'";
+		}
+		
+		if (search.getLogin() != null && !search.getLogin().equals("")) {
+			where = where + " and user.login like '"+ search.getLogin() + "%'";
+		}
+		
+		if (search.getEmail() != null && !search.getEmail().equals("")) {
+			where = where + " and user.email like '"+ search.getEmail() + "%'";
+		}
+
+		if (search.getActive() != null) {
+			where = where + " and user.active = "+ search.getActive();
 		}
 		
 		String orderBy = "";
@@ -53,13 +63,8 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 			orderBy = " order by user."+ search.getSort() +" "+ search.getOrder();
 		}
 		
-		String contentSql = "select new "+ UserSearch.class.getName() +"(user.id, user.name, user.login, user.email, user.active, user.modifier, user.modified) from User user" + where + orderBy;
-		String totalSql = "select count(user) from User user" + where;
-		
-		System.out.println("contentSql: "+ contentSql);
-		System.out.println("totalSql: "+ totalSql);
-		System.out.println("firstResult: "+ firstResult);
-		System.out.println("maxResults: "+ maxResults);
+		String contentSql = "select new "+ UserSearch.class.getName() +"(user.id, user.name, user.login, user.email, user.active, user.modifier, user.modified) from UserEntity user" + where + orderBy;
+		String totalSql = "select count(user) from UserEntity user" + where;
 		
 		List<UserSearch> content = entityManager
 			.createQuery(contentSql, UserSearch.class)
@@ -70,14 +75,6 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 			.createQuery(totalSql, Long.class)
 			.getSingleResult();
 		PageImpl<UserSearch> pageImpl = new PageImpl<UserSearch>(content, pageable, total);
-		
-		System.out.println("content: "+ content);
-		System.out.println("total: "+ total);
-		System.out.println("pageImpl: "+ pageImpl);
-		System.out.println("pageImpl.getTotalElements: "+ pageImpl.getTotalElements());
-		System.out.println("pageImpl.getNumber: "+ pageImpl.getNumber());
-		System.out.println("pageImpl.getSize: "+ pageImpl.getSize());
-		System.out.println("pageImpl.getContent: "+ pageImpl.getContent());
 		
 		return pageImpl;
 	}	

@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import cz.buca.demo.server.security.UserPrincipal;
+import cz.buca.demo.server.security.UserSession;
 
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
@@ -22,7 +22,7 @@ public class PersistenceConfig {
 			.map(SecurityContext::getAuthentication)
 			.filter(Authentication::isAuthenticated)
 			.map(Authentication::getPrincipal)
-			.map(UserPrincipal.class::cast)
-			.map(UserPrincipal::getName);
+			.map(UserSession.class::cast)
+			.map(UserSession::getName);
 	}
 }

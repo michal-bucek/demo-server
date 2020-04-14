@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import cz.buca.demo.server.entity.User;
+import cz.buca.demo.server.entity.UserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -16,11 +16,12 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-public class UserPrincipal implements UserDetails {
+public class UserSession implements UserDetails {
 	
 	private static final long serialVersionUID = 7647627706949417160L;
 
-	private String id;
+	private String uuid;
+	private Long id;
 	private String name;
 	private String password;
 	private String username;
@@ -30,19 +31,21 @@ public class UserPrincipal implements UserDetails {
 	private boolean credentialsNonExpired = true;
 	private boolean enabled = true;
 	
-	public UserPrincipal(User user) {
-		this.id = UUID.randomUUID().toString();
-		this.name = user.getName();
-		this.password = user.getPass();
-		this.username = user.getLogin();
-		this.authorities = user.getRoles()
+	public UserSession(UserEntity userEntity) {
+		this.uuid = UUID.randomUUID().toString();
+		this.id = userEntity.getId();
+		this.name = userEntity.getName();
+		this.password = userEntity.getPass();
+		this.username = userEntity.getLogin();
+		this.authorities = userEntity.getRoles()
 			.stream()
 			.map(SimpleGrantedAuthority::new)
 			.collect(Collectors.toList());
-		this.enabled = user.getActive();
+		this.enabled = userEntity.getActive();
 	}
 	
-	public UserPrincipal(String id, String name, String username, Collection<GrantedAuthority> authorities) {
+	public UserSession(String uuid, Long id, String name, String username, Collection<GrantedAuthority> authorities) {
+		this.uuid = uuid;
 		this.id = id;
 		this.name = name;
 		this.username = username;

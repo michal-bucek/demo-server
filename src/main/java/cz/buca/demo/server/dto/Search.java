@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class Search {
 
-	private String text;
 	private Integer page = 0;
 	private Integer perPage = 20;
 	private String sort;

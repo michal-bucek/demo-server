@@ -1,5 +1,6 @@
 app:
   admin:
+    id: -1
     name: Administrator
     login: admin
     # 12345

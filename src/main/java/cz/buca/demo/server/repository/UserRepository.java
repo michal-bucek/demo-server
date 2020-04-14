@@ -5,9 +5,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import cz.buca.demo.server.entity.User;
+import cz.buca.demo.server.entity.UserEntity;
 
-public interface UserRepository extends PagingAndSortingRepository<User, Long>, UserRepositoryCustom, JpaRepository<User, Long> {
+public interface UserRepository extends PagingAndSortingRepository<UserEntity, Long>, UserRepositoryCustom, JpaRepository<UserEntity, Long> {
 		
-	Optional<User> findByLogin(String login);
+	Optional<UserEntity> findByLogin(String login);
 }

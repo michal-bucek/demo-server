@@ -18,9 +18,10 @@ import org.springframework.stereotype.Service;
 import cz.buca.demo.server.config.ApplicationConfig;
 import cz.buca.demo.server.dto.Login;
 import cz.buca.demo.server.dto.Session;
+import cz.buca.demo.server.dto.preference.PreferenceDetail;
 import cz.buca.demo.server.exception.ExpiredTokenException;
 import cz.buca.demo.server.exception.ServiceException;
-import cz.buca.demo.server.security.UserPrincipal;
+import cz.buca.demo.server.security.UserSession;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -37,27 +38,34 @@ public class AuthenticationService {
 	@Autowired
     private AuthenticationManager authenticationManager;
 	
-	private Session generateSession(UserPrincipal userPrincipal) throws ServiceException {
+	@Autowired
+	private PreferenceService preferenceService;
+	
+	private Session createSession(UserSession userSession) throws ServiceException {
 		Session session = new Session();
-		String token = generateToken(userPrincipal, false);
-		String refresh = generateToken(userPrincipal, true);
-		List<String> roles = userPrincipal.getAuthorities()
+		String token = generateToken(userSession, false);
+		String refresh = generateToken(userSession, true);
+		List<String> roles = userSession.getAuthorities()
 			.stream()
 			.map(GrantedAuthority::getAuthority)
 			.collect(Collectors.toList());
+		Long id = userSession.getId();
+		List<PreferenceDetail> preferences = preferenceService.findByParentId(id);
 		
-		session.setId(userPrincipal.getId());
-		session.setName(userPrincipal.getName());
+		session.setUuid(userSession.getUuid());
+		session.setId(id);
+		session.setName(userSession.getName());
 		session.setToken(token);
 		session.setRefresh(refresh);
 		session.setRoles(roles);
+		session.setPreferences(preferences);
 		
-		log.debug("generate session return "+ session +" for "+ userPrincipal);
+		log.debug("create session return "+ session +" for "+ userSession);
 		
 		return session;
 	}
 	
-	public String generateToken(UserPrincipal userPrincipal, boolean isRefreshToken) throws ServiceException {
+	public String generateToken(UserSession userSession, boolean isRefreshToken) throws ServiceException {
 		String token = null;
 		Integer minutesExpiration = null;
 		
@@ -71,24 +79,25 @@ public class AuthenticationService {
 			
 			Date expiration = new Date(System.currentTimeMillis() + minutesExpiration * 60 * 1000);
 			String secret = applicationConfig.getToken().getSecret();
-			String roles = userPrincipal.getAuthorities()
+			String roles = userSession.getAuthorities()
 				.stream()
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.joining(","));			
 			token = Jwts.builder()
-				.setSubject(userPrincipal.getUsername())
-				.claim("id", userPrincipal.getId())
-				.claim("name", userPrincipal.getName())
+				.setSubject(userSession.getUsername())
+				.claim("uuid", userSession.getUuid())
+				.claim("id", userSession.getId())
+				.claim("name", userSession.getName())
 				.claim("roles", roles)
 				.setExpiration(expiration)
 				.signWith(SignatureAlgorithm.HS512, secret)
 				.compact();
 			
 		} catch (Exception exception) {			
-			throw new ServiceException("generate token with "+ userPrincipal +", minutesExpiration "+ minutesExpiration +" and isRefreshToken "+ isRefreshToken +" faild", exception);
+			throw new ServiceException("generate token with "+ userSession +", minutesExpiration "+ minutesExpiration +" and isRefreshToken "+ isRefreshToken +" faild", exception);
 		}
 		
-		log.debug("generate token return "+ token +" for "+ userPrincipal +", minutesExpiration "+ minutesExpiration +" and isRefreshToken "+ isRefreshToken);
+		log.debug("generate token return "+ token +" for "+ userSession +", minutesExpiration "+ minutesExpiration +" and isRefreshToken "+ isRefreshToken);
 		
 		return token;
 	}
@@ -103,14 +112,15 @@ public class AuthenticationService {
 					.setSigningKey(secret)
 					.parseClaimsJws(token)
 					.getBody();
-				String id = claims.get("id").toString();
+				String uuid = claims.get("uuid").toString();
+				Long id = Long.valueOf(claims.get("id").toString());
 				String name = claims.get("name").toString();
 				String login = claims.getSubject();				
 				Collection<GrantedAuthority> authorities = Arrays.stream(claims.get("roles").toString().split(","))
 					.map(SimpleGrantedAuthority::new)
 					.collect(Collectors.toList());
-				UserPrincipal userPrincipal = new UserPrincipal(id, name, login, authorities);
-				authentication = new UsernamePasswordAuthenticationToken(userPrincipal, null, authorities);
+				UserSession userSession = new UserSession(uuid, id, name, login, authorities);
+				authentication = new UsernamePasswordAuthenticationToken(userSession, null, authorities);
 				
 			} catch (ExpiredJwtException expiredJwtException) {
 				throw new ExpiredTokenException("validate token "+ token +" faild, token expired", expiredJwtException);
@@ -131,11 +141,11 @@ public class AuthenticationService {
 		try {
 			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(login.getLogin(), login.getPassword());
 			Authentication authentication = authenticationManager.authenticate(authenticationToken);
-			UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+			UserSession userSession = (UserSession) authentication.getPrincipal();
 			
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			
-			session = generateSession(userPrincipal);
+			session = createSession(userSession);
 			
 		} catch (Exception exception) {			
 			throw new ServiceException("login with "+ login +" faild", exception);
@@ -151,8 +161,8 @@ public class AuthenticationService {
 		
 		try {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();			
-			session = generateSession(userPrincipal);
+			UserSession userSession = (UserSession) authentication.getPrincipal();			
+			session = createSession(userSession);
 			
 		} catch (Exception exception) {			
 			throw new ServiceException("refresh faild", exception);

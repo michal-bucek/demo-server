@@ -16,7 +16,7 @@ import lombok.Data;
 @Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class Auditable {
+public abstract class AuditableEntity {
 
 	@CreatedBy
 	private String creator;

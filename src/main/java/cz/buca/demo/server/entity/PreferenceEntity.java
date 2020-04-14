@@ -1,8 +1,5 @@
 package cz.buca.demo.server.entity;
 
-import java.util.List;
-
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,23 +14,16 @@ import lombok.ToString;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "users")
-public class User extends Auditable {
+@Table(name = "preferences")
+public class PreferenceEntity extends AuditableEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String name;
-
-	private String login;
-
-	private String pass;
 	
-	private String email;
+	private String value;
 	
-	private Boolean active;
-
-	@ElementCollection
-	private List<String> roles;
+	private Long parentId;
 }

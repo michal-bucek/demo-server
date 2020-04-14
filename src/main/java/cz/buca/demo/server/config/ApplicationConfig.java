@@ -3,7 +3,7 @@ package cz.buca.demo.server.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import cz.buca.demo.server.entity.User;
+import cz.buca.demo.server.entity.UserEntity;
 import lombok.Data;
 
 @Data
@@ -13,7 +13,7 @@ public class ApplicationConfig {
 	
 	private Token token;
 	private Cors cors;	
-	private User admin;
+	private UserEntity admin;
 	
 	@Data
 	public static class Token {

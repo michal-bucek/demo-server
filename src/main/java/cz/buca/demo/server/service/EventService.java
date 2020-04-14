@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import cz.buca.demo.server.event.Event;
-import cz.buca.demo.server.security.UserPrincipal;
+import cz.buca.demo.server.security.UserSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -22,12 +22,16 @@ public class EventService {
 	private ApplicationEventPublisher eventPublisher;
 
 	public void publish(String destination, String type, Object data) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 		Event event = new Event();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
-		event.setSessionId(userPrincipal.getId());
-		event.setUserName(userPrincipal.getName());
+		if (authentication != null) {
+			UserSession userSession = (UserSession) authentication.getPrincipal();
+			
+			event.setUuid(userSession.getUuid());
+			event.setUserName(userSession.getName());	
+		}
+		
 		event.setType(type);
 		event.setData(data);
 		
