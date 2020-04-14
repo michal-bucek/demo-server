@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import cz.buca.demo.server.config.ApplicationConfig;
 import cz.buca.demo.server.dto.Data;
 import cz.buca.demo.server.dto.user.SearchUser;
 import cz.buca.demo.server.dto.user.UserChangePassword;
@@ -34,9 +35,6 @@ public class UserService implements UserDetailsService {
 	private UserRepository userRepository;
 	
 	@Autowired
-	private ApplicationConfig applicationConfig;
-	
-	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
@@ -51,16 +49,6 @@ public class UserService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		Optional<UserEntity> optional = userRepository.findByLogin(userName);
-		
-		if (optional.isEmpty()) {
-			UserEntity admin = applicationConfig.getAdmin();
-			
-			if (userName.equals(admin.getLogin())) {
-				log.info("try to login as config admin");
-				
-				optional = Optional.of(admin);
-			}
-		}
 		
 		if (optional.isEmpty()) {
 			throw new UsernameNotFoundException("user with login " + userName + " not found");
@@ -146,6 +134,7 @@ public class UserService implements UserDetailsService {
 		return detail;
 	}
 	
+	@Transactional
 	public UserDetail deleteById(Long id) {		
 		UserEntity user = userRepository.findById(id).get();
 		UserDetail detail = dtoMapper.toUserDetail(user);
