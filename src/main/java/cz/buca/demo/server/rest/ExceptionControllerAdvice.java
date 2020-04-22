@@ -1,4 +1,4 @@
-package cz.buca.demo.server.controller;
+package cz.buca.demo.server.rest;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

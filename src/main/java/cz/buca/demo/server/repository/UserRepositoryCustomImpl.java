@@ -12,8 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
-import cz.buca.demo.server.dto.user.SearchUser;
-import cz.buca.demo.server.dto.user.UserSearch;
+import cz.buca.demo.server.model.user.SearchUser;
+import cz.buca.demo.server.model.user.UserSearch;
 
 public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 

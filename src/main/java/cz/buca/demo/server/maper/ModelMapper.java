@@ -5,16 +5,16 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-import cz.buca.demo.server.dto.preference.PreferenceDetail;
-import cz.buca.demo.server.dto.preference.PreferenceSave;
-import cz.buca.demo.server.dto.user.UserCreate;
-import cz.buca.demo.server.dto.user.UserDetail;
-import cz.buca.demo.server.dto.user.UserUpdate;
 import cz.buca.demo.server.entity.PreferenceEntity;
 import cz.buca.demo.server.entity.UserEntity;
+import cz.buca.demo.server.model.preference.PreferenceDetail;
+import cz.buca.demo.server.model.preference.PreferenceSave;
+import cz.buca.demo.server.model.user.UserCreate;
+import cz.buca.demo.server.model.user.UserDetail;
+import cz.buca.demo.server.model.user.UserUpdate;
 
 @Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public abstract class DtoMapper {
+public abstract class ModelMapper {
 	
 	public abstract UserDetail toUserDetail(UserEntity entity);
 	

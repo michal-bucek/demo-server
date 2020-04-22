@@ -1,8 +1,8 @@
-package cz.buca.demo.server.dto;
+package cz.buca.demo.server.model;
 
 import java.util.List;
 
-import cz.buca.demo.server.dto.preference.PreferenceDetail;
+import cz.buca.demo.server.model.preference.PreferenceDetail;
 import lombok.Data;
 
 @Data

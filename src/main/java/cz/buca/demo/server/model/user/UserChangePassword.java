@@ -1,4 +1,4 @@
-package cz.buca.demo.server.dto.user;
+package cz.buca.demo.server.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

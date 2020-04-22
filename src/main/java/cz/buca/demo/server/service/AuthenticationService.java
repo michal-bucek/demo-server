@@ -16,11 +16,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import cz.buca.demo.server.config.ApplicationConfig;
-import cz.buca.demo.server.dto.Login;
-import cz.buca.demo.server.dto.Session;
-import cz.buca.demo.server.dto.preference.PreferenceDetail;
 import cz.buca.demo.server.exception.ExpiredTokenException;
 import cz.buca.demo.server.exception.ServiceException;
+import cz.buca.demo.server.model.Login;
+import cz.buca.demo.server.model.Session;
+import cz.buca.demo.server.model.preference.PreferenceDetail;
 import cz.buca.demo.server.security.UserSession;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

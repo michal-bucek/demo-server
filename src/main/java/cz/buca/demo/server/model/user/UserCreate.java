@@ -1,20 +1,18 @@
-package cz.buca.demo.server.dto.user;
+package cz.buca.demo.server.model.user;
 
-import java.util.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserSearch {
+public class UserCreate {
 
-	private Long id;
 	private String name;
 	private String login;
+	private String pass;
 	private String email;
 	private Boolean active;
-	
-	private String modifier;
-	private Date modified;
+	private List<String> roles;
 }

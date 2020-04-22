@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import cz.buca.demo.server.dto.user.UserChangePassword;
-import cz.buca.demo.server.dto.user.UserCreate;
-import cz.buca.demo.server.dto.user.UserDetail;
+import cz.buca.demo.server.model.user.UserChangePassword;
+import cz.buca.demo.server.model.user.UserCreate;
+import cz.buca.demo.server.model.user.UserDetail;
 import cz.buca.demo.server.service.UserService;
 
 @SpringBootTest

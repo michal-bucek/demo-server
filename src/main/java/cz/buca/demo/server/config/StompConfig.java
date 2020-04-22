@@ -9,7 +9,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+public class StompConfig implements WebSocketMessageBrokerConfigurer {
 	
 	@Autowired
 	private ApplicationConfig applicationConfig;
@@ -18,7 +18,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		String origin = applicationConfig.getCors().getOrigin();
 		
-		registry.addEndpoint("/socket").setAllowedOrigins(origin);
+		registry.addEndpoint("/api/stomp").setAllowedOrigins(origin);
 	}
 
 	@Override

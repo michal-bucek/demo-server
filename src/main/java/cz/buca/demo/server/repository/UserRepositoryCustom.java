@@ -2,8 +2,8 @@ package cz.buca.demo.server.repository;
 
 import org.springframework.data.domain.Page;
 
-import cz.buca.demo.server.dto.user.SearchUser;
-import cz.buca.demo.server.dto.user.UserSearch;
+import cz.buca.demo.server.model.user.SearchUser;
+import cz.buca.demo.server.model.user.UserSearch;
 
 public interface UserRepositoryCustom {
 

@@ -1,4 +1,4 @@
-package cz.buca.demo.server.dto;
+package cz.buca.demo.server.model;
 
 import lombok.Data;
 

@@ -1,9 +1,7 @@
-package cz.buca.demo.server.dto.user;
+package cz.buca.demo.server.model.preference;
 
 import java.util.Date;
-import java.util.List;
 
-import cz.buca.demo.server.dto.preference.PreferenceDetail;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,15 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDetail {
+public class PreferenceDetail {
 
 	private Long id;
 	private String name;
-	private String login;
-	private String email;
-	private Boolean active;
-	private List<String> roles;
-	private List<PreferenceDetail> preferences;
+	private String value;
+	private Long parentId;
 	
 	private String creator;
 	private Date created;

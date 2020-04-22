@@ -1,4 +1,4 @@
-package cz.buca.demo.server.dto.preference;
+package cz.buca.demo.server.model.preference;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

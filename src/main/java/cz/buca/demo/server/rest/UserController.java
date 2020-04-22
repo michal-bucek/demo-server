@@ -1,4 +1,4 @@
-package cz.buca.demo.server.controller;
+package cz.buca.demo.server.rest;
 
 import java.util.List;
 
@@ -13,21 +13,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cz.buca.demo.server.dto.Data;
-import cz.buca.demo.server.dto.user.SearchUser;
-import cz.buca.demo.server.dto.user.UserChangePassword;
-import cz.buca.demo.server.dto.user.UserCreate;
-import cz.buca.demo.server.dto.user.UserDetail;
-import cz.buca.demo.server.dto.user.UserSearch;
-import cz.buca.demo.server.dto.user.UserUpdate;
 import cz.buca.demo.server.exception.ServiceException;
+import cz.buca.demo.server.model.Data;
+import cz.buca.demo.server.model.user.SearchUser;
+import cz.buca.demo.server.model.user.UserChangePassword;
+import cz.buca.demo.server.model.user.UserCreate;
+import cz.buca.demo.server.model.user.UserDetail;
+import cz.buca.demo.server.model.user.UserSearch;
+import cz.buca.demo.server.model.user.UserUpdate;
 import cz.buca.demo.server.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/rest/user")
 @Slf4j
 public class UserController {
 	

@@ -1,6 +1,6 @@
-package cz.buca.demo.server.dto.user;
+package cz.buca.demo.server.model.user;
 
-import cz.buca.demo.server.dto.Search;
+import cz.buca.demo.server.model.Search;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
